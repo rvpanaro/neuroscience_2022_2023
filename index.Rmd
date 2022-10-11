@@ -8,7 +8,7 @@ output:
   xaringan::moon_reader:
     lib_dir: libs
     chakra: libs/remark-latest.min.js
-    self_contained: TRUE
+    self_contained: FALSE
     nature:
       highlightLines: true
       highlightStyle: github
