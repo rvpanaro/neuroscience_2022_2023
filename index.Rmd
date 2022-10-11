@@ -100,55 +100,6 @@ download the installation file according to your operating system.
 
 ---
 
-# What comes with the R software installation?
-
---
-
-- R has fifteen "base packages" downloaded at installation:
-  - base, 
-  - compiler, 
-  - datasets, 
-  - grDevices, 
-  - graphics, 
-  - grid, 
-  - methods, 
-  - parallel,
-  - splines,
-  - stats,
-  - stats4,
-  - tcltk, 
-  - tools,
-  - translations, and utils.
-
-- An R package is a library containing code, documentation and data, important for some specific purpose.
-
-
-```{r, results = 'asis', echo = F, eval = F}
-library("magrittr")
-
-static_help <- function(pkg, topic, links = tools::findHTMLlinks()) {
-  tmp <- tempfile()
-  pkgRdDB <- tools:::fetchRdDB(file.path(find.package(pkg), "help", pkg))
-  force(links)
-  tools::Rd2HTML(pkgRdDB[[topic]], tmp,
-    package = pkg,
-    Links = links, no_links = is.null(links)
-  )
-  out <- readLines(tmp)
-
-  headfoot <- grep("body", out)
-  idxArgs <-
-    ifelse(which(out == "<h3>Arguments</h3>") %>% length() == 0,
-      headfoot[2] - 1,
-      which(out == "<h3>Arguments</h3>") - 1
-    )
-
-  cat(out[(headfoot[1] + 1):idxArgs], sep = "\n")
-}
-```
-
----
-
 # Ask R!
 
 Use the
@@ -237,12 +188,16 @@ background-size: cover
 | typeof    | mode      | storage.mode | example |
 |-----------|-----------|--------------|--------------|
 | logical   | logical   | logical      | x = TRUE |
-| integer   | numeric   | integer      | x = 1L |
 | double    | numeric   | double       | x = 1|
-| complex   | complex   | complex      | x = 1i|
 | character | character | character    | x = "1"|
-| raw       | raw       | raw          | x = raw(2)|
 
+```{r}
+c(1,3,9)
+```
+
+```{r}
+typeof(c(1,3,9))
+```
 
 ---
 
@@ -269,85 +224,6 @@ list(TRUE, 1L, 1, "1")
 
 ---
 
-
-## Function objects
-
-> Functions (or more precisely, function closures) have three basic components: a formal argument list, a body and an environment. 
-
---
-
-- Formal argument list
-
-```{r}
-user_func <-
-  function(x) { #<<
-    result <- x + 1
-    return(result)
-  }
-```
-
---
-
-- Function body
-
-```{r}
-user_func <-
-  function(x) {
-    result <- x + 1 #<<
-    return(result) #<<
-  }
-```
-
---
-
-> When a function is called, a new environment (called the evaluation environment) is created. 
-
----
-
-## Environments
-
-> When R looks up the value for a symbol the frame is examined and if a matching symbol is found its value will be returned. 
-
-> Environments form a tree structure in which the enclosures play the role of parents. 
-
---
-
-.pull-left[
-```{r}
-environment()
-
-user_func2 <- function() {
-  x <- 2 # evaluation environment #<<
-  print(environment())
-}
-
-ls()
-```
-]
- 
-.pull-right[
-
-- Packages also produce evaluation environments, you can check it on the environment's drop down menu.
-
-<center>
-<img src="./img/Screenshot from 2022-10-03 18-20-31.png" style="width: 100%" />
-</center>
-]
-
----
-
-## NULL
-
-> The **NULL** object has no type and no modifiable properties. There is only one **NULL** object in R, to which all instances refer. To test for **NULL** use **is.null**. You cannot set attributes on NULL. 
-
-```{r}
-is.null(list()) # FALSE (on purpose!)
-is.null(integer(length = 0)) # FALSE
-is.null(logical(length = 0)) # FALSE
-```
-
----
-
 class: left, middle
 background-color: #f0f0f0
 background-size: cover
@@ -367,6 +243,8 @@ z <- 1:3
 names(z)
 names(z)[2] <- "b" ## assign just one name
 z
+
+class(names(z))
 ```
 
 ---
@@ -539,77 +417,25 @@ plot(
 -	Minus, can be unary or binary
 +	Plus, can be unary or binary
 !	Unary not
-~	Tilde, used for model formulae, can be either unary or binary
+~	Tilde, used for model formulae, can be either unary 
+or binary
 ?	Help
 :	Sequence, binary (in model formulae: interaction)
 `*`	Multiplication, binary
 /	Division, binary
 ^	Exponentiation, binary
-%x%	Special binary operators, x can be replaced by any valid name
-%%	Modulus, binary
-%/%	Integer divide, binary
-%*%	Matrix product, binary
-%o%	Outer product, binary
-%x%	Kronecker product, binary
-%in%	Matching operator, binary (in model formulae: nesting)
 <	Less than, binary
 >	Greater than, binary
 ==	Equal to, binary
 >=	Greater than or equal to, binary
 <=	Less than or equal to, binary
+
 [...]
 ```
 
----
-
-### Operators
-
-.pull-left[
 ```{r, eval = F}
-foo <- Vectorize(function(x, y) {
-  if (x^2 + y^2 < 1) { #<<
-    return(TRUE)
-  } else {
-    return(FALSE)
-  }
-})
-
-x <- runif(1000, -1, 1)
-y <- runif(1000, -1, 1)
-
-out <- foo(x, y)
-
-plot(
-  x = x[out],
-  y = y[out],
-  pch = 19,
-  col = "cyan",
-  bty = "n"
-)
+?operators
 ```
-]
-
-.pull-right[
-```{r, echo = F, fig.height = 7}
-foo <- Vectorize(
-  function(x, y) {
-    if (x^2 + y^2 < 1) { #<<
-      return(TRUE)
-    } else {
-      return(FALSE)
-    }
-  }
-)
-
-x <- runif(1000, -1, 1)
-y <- runif(1000, -1, 1)
-
-out <- foo(x, y)
-
-plot(x[out], y[out], pch = 19, col = "cyan", bty = "n")
-```
-]
-
 ---
 
 class: left, middle
@@ -637,7 +463,7 @@ if (x^2 + y^2 < 1) {
 
 ---
 
-.pull-left[
+
 ### for
 
 > For each element in vector the variable *name* is set to the value of that element and *statement1* is evaluated.
@@ -650,26 +476,6 @@ for (name in 1:3) {
 
 > A side effect is that the variable name still exists after the loop has concluded and it has the value of the last element of vector that the loop was evaluated for. 
 
-]
-
-.pull-right[
-### while
-
-> [...] *statement1* is evaluated and if its value is TRUE then statement2 is evaluated. 
-
-```{r}
-name <- 1
-
-while (name < 4) { # statement1 #<<
-
-  print(name + 1) # statement2 #<<
-  name <- name + 1
-}
-```
-
-> This process continues until *statement1* evaluates to FALSE.
-
-]
 
 ---
 

@@ -111,33 +111,6 @@ download the installation file according to your operating system.
 
 ---
 
-# What comes with the R software installation?
-
---
-
-- R has fifteen "base packages" downloaded at installation:
-  - base, 
-  - compiler, 
-  - datasets, 
-  - grDevices, 
-  - graphics, 
-  - grid, 
-  - methods, 
-  - parallel,
-  - splines,
-  - stats,
-  - stats4,
-  - tcltk, 
-  - tools,
-  - translations, and utils.
-
-- An R package is a library containing code, documentation and data, important for some specific purpose.
-
-
-
-
----
-
 # Ask R!
 
 Use the
@@ -227,12 +200,26 @@ background-size: cover
 | typeof    | mode      | storage.mode | example |
 |-----------|-----------|--------------|--------------|
 | logical   | logical   | logical      | x = TRUE |
-| integer   | numeric   | integer      | x = 1L |
 | double    | numeric   | double       | x = 1|
-| complex   | complex   | complex      | x = 1i|
 | character | character | character    | x = "1"|
-| raw       | raw       | raw          | x = raw(2)|
 
+
+```r
+c(1,3,9)
+```
+
+```
+## [1] 1 3 9
+```
+
+
+```r
+typeof(c(1,3,9))
+```
+
+```
+## [1] "double"
+```
 
 ---
 
@@ -274,117 +261,6 @@ list(TRUE, 1L, 1, "1")
 
 ---
 
-
-## Function objects
-
-&gt; Functions (or more precisely, function closures) have three basic components: a formal argument list, a body and an environment. 
-
---
-
-- Formal argument list
-
-
-```r
-user_func &lt;-
-* function(x) {
-    result &lt;- x + 1
-    return(result)
-  }
-```
-
---
-
-- Function body
-
-
-```r
-user_func &lt;-
-  function(x) {
-*   result &lt;- x + 1
-*   return(result)
-  }
-```
-
---
-
-&gt; When a function is called, a new environment (called the evaluation environment) is created. 
-
----
-
-## Environments
-
-&gt; When R looks up the value for a symbol the frame is examined and if a matching symbol is found its value will be returned. 
-
-&gt; Environments form a tree structure in which the enclosures play the role of parents. 
-
---
-
-.pull-left[
-
-```r
-environment()
-```
-
-```
-## &lt;environment: R_GlobalEnv&gt;
-```
-
-```r
-user_func2 &lt;- function() {
-* x &lt;- 2 # evaluation environment
-  print(environment())
-}
-
-ls()
-```
-
-```
-## [1] "user_func"  "user_func2"
-```
-]
- 
-.pull-right[
-
-- Packages also produce evaluation environments, you can check it on the environment's drop down menu.
-
-&lt;center&gt;
-&lt;img src="./img/Screenshot from 2022-10-03 18-20-31.png" style="width: 100%" /&gt;
-&lt;/center&gt;
-]
-
----
-
-## NULL
-
-&gt; The **NULL** object has no type and no modifiable properties. There is only one **NULL** object in R, to which all instances refer. To test for **NULL** use **is.null**. You cannot set attributes on NULL. 
-
-
-```r
-is.null(list()) # FALSE (on purpose!)
-```
-
-```
-## [1] FALSE
-```
-
-```r
-is.null(integer(length = 0)) # FALSE
-```
-
-```
-## [1] FALSE
-```
-
-```r
-is.null(logical(length = 0)) # FALSE
-```
-
-```
-## [1] FALSE
-```
-
----
-
 class: left, middle
 background-color: #f0f0f0
 background-size: cover
@@ -417,6 +293,14 @@ z
 ```
 ## &lt;NA&gt;    b &lt;NA&gt; 
 ##    1    2    3
+```
+
+```r
+class(names(z))
+```
+
+```
+## [1] "character"
 ```
 
 ---
@@ -601,10 +485,10 @@ d
 
 ```
 ##   x y fac
-*## 1 1 1   B
-*## 2 1 2   B
+*## 1 1 1   A
+*## 2 1 2   C
 ## 3 1 3   B
-## 4 1 4   B
+## 4 1 4   A
 ```
 
 --
@@ -616,8 +500,8 @@ d[1:2, ]
 
 ```
 ##   x y fac
-*## 1 1 1   B
-*## 2 1 2   B
+*## 1 1 1   A
+*## 2 1 2   C
 ```
 
 ---
@@ -655,7 +539,7 @@ plot(
 ]
 
 .pull-right[
-&lt;img src="index_files/figure-html/unnamed-chunk-21-1.png" width="504" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-18-1.png" width="504" /&gt;
 ]
 
 ---
@@ -667,61 +551,26 @@ plot(
 -	Minus, can be unary or binary
 +	Plus, can be unary or binary
 !	Unary not
-~	Tilde, used for model formulae, can be either unary or binary
+~	Tilde, used for model formulae, can be either unary 
+or binary
 ?	Help
 :	Sequence, binary (in model formulae: interaction)
 `*`	Multiplication, binary
 /	Division, binary
 ^	Exponentiation, binary
-%x%	Special binary operators, x can be replaced by any valid name
-%%	Modulus, binary
-%/%	Integer divide, binary
-%*%	Matrix product, binary
-%o%	Outer product, binary
-%x%	Kronecker product, binary
-%in%	Matching operator, binary (in model formulae: nesting)
 &lt;	Less than, binary
 &gt;	Greater than, binary
 ==	Equal to, binary
 &gt;=	Greater than or equal to, binary
 &lt;=	Less than or equal to, binary
+
 [...]
 ```
 
----
-
-### Operators
-
-.pull-left[
 
 ```r
-foo &lt;- Vectorize(function(x, y) {
-* if (x^2 + y^2 &lt; 1) {
-    return(TRUE)
-  } else {
-    return(FALSE)
-  }
-})
-
-x &lt;- runif(1000, -1, 1)
-y &lt;- runif(1000, -1, 1)
-
-out &lt;- foo(x, y)
-
-plot(
-  x = x[out],
-  y = y[out],
-  pch = 19,
-  col = "cyan",
-  bty = "n"
-)
+?operators
 ```
-]
-
-.pull-right[
-&lt;img src="index_files/figure-html/unnamed-chunk-24-1.png" width="504" /&gt;
-]
-
 ---
 
 class: left, middle
@@ -754,7 +603,7 @@ if (x^2 + y^2 &lt; 1) {
 
 ---
 
-.pull-left[
+
 ### for
 
 &gt; For each element in vector the variable *name* is set to the value of that element and *statement1* is evaluated.
@@ -774,33 +623,6 @@ for (name in 1:3) {
 
 &gt; A side effect is that the variable name still exists after the loop has concluded and it has the value of the last element of vector that the loop was evaluated for. 
 
-]
-
-.pull-right[
-### while
-
-&gt; [...] *statement1* is evaluated and if its value is TRUE then statement2 is evaluated. 
-
-
-```r
-name &lt;- 1
-
-*while (name &lt; 4) { # statement1
-
-* print(name + 1) # statement2
-  name &lt;- name + 1
-}
-```
-
-```
-## [1] 2
-## [1] 3
-## [1] 4
-```
-
-&gt; This process continues until *statement1* evaluates to FALSE.
-
-]
 
 ---
 
@@ -1075,7 +897,7 @@ plot(x = x, y = sin(x))
 --
 
 .pull-right[
-&lt;img src="index_files/figure-html/unnamed-chunk-36-1.png" width="504" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-31-1.png" width="504" /&gt;
 ]
 
 ---
@@ -1095,7 +917,7 @@ lines(x, cos(x))
 --
 
 .pull-right[
-&lt;img src="index_files/figure-html/unnamed-chunk-37-1.png" width="504" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-32-1.png" width="504" /&gt;
 ]
 
 --
@@ -1117,7 +939,7 @@ lines(x, cos(x), col = "blue")
 --
 
 .pull-right[
-&lt;img src="index_files/figure-html/unnamed-chunk-38-1.png" width="504" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-33-1.png" width="504" /&gt;
 ]
 
 ---
@@ -1214,7 +1036,7 @@ appropriate range of axes (*boxplot()*).
 boxplot(dt$before)
 ```
 
-&lt;img src="index_files/figure-html/unnamed-chunk-43-1.png" width="288" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-38-1.png" width="288" /&gt;
 ]
 
 --
@@ -1227,7 +1049,7 @@ boxplot(dt$before,
         horizontal = TRUE)
 ```
 
-&lt;img src="index_files/figure-html/unnamed-chunk-44-1.png" width="288" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-39-1.png" width="288" /&gt;
 ]
 
 ---
@@ -1250,7 +1072,7 @@ points(dt$before, y = rep(0.6, 12), pch=1,
 
 .pull-right[
 
-&lt;img src="index_files/figure-html/unnamed-chunk-45-1.png" width="504" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-40-1.png" width="504" /&gt;
 ]
 
 --
@@ -1272,7 +1094,7 @@ points(dt$before, rep(0, 12), pch=15, col="orange", cex=0.75)
 
 .pull-right[
 
-&lt;img src="index_files/figure-html/unnamed-chunk-46-1.png" width="504" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-41-1.png" width="504" /&gt;
 ]
 
 ---
@@ -1319,7 +1141,7 @@ table(dt$group) / length(dt$group)
 pie(table(dt$group))
 ```
 
-&lt;img src="index_files/figure-html/unnamed-chunk-48-1.png" width="216" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-43-1.png" width="216" /&gt;
 ]
 
 --
@@ -1330,7 +1152,7 @@ pie(table(dt$group))
 barplot(table(dt$group))
 ```
 
-&lt;img src="index_files/figure-html/unnamed-chunk-49-1.png" width="216" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-44-1.png" width="216" /&gt;
 ]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
