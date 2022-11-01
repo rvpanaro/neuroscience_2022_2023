@@ -712,12 +712,15 @@ CASE STUDY: In a clinical trial 12 patients are randomly assigned to two differe
 measurements are taken before and after the treatment.
 
 ## Loading data
-Read the data (F:/neuroscience_ws2018/exercise_001/study1.csv) into the R workspace .
+Read the data [here](https://raw.githubusercontent.com/rvpanaro/neuroscience_2022_2023/main/data/study1.csv) into the R workspace .
 
 --
 
 ```{r plot-first, eval = FALSE}
-dt <- read.csv("data/study1.csv", sep=";")
+library(RCurl)
+
+dt <- read.csv(text = getURL("https://raw.githubusercontent.com/rvpanaro/neuroscience_2022_2023/main/data/study1.csv"),
+               sep=";")
 str(dt)
 ```
 
